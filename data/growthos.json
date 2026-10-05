@@ -1,0 +1,198 @@
+{
+  "campaign": {
+    "name": "Build Your First AI Project in 60 Minutes",
+    "target": 500,
+    "budget": 2000,
+    "durationDays": 7,
+    "startDate": null
+  },
+  "registrations": [
+    {
+      "id": "reg_9447204e-f207-406b-bca9-e5eb58673e4e",
+      "name": "Aasritha Sai Devireddy",
+      "email": "aasrithasaidevireddy944@gmail.com",
+      "phone": "08332841009",
+      "college": "Amrita",
+      "branch": "CSE - AI",
+      "graduationYear": "2027",
+      "goal": "Something new",
+      "projectName": "XYZ",
+      "stack": "Python",
+      "source": "Email",
+      "referralCode": "AI60-FD30DA6C",
+      "referrerCode": "",
+      "createdAt": "2026-10-05T11:15:18.925Z"
+    },
+    {
+      "id": "reg_796f1e8b-e3a1-40e0-b266-42dbbffa5052",
+      "name": "Arya",
+      "email": "arya.100@gmail.com",
+      "phone": "09849188009",
+      "college": "Amrita",
+      "branch": "CSE - AI",
+      "graduationYear": "2027",
+      "goal": "New",
+      "projectName": "XYZ",
+      "stack": "Java",
+      "source": "Friend / referral",
+      "referralCode": "AI60-3AC2BE63",
+      "referrerCode": "AI60-FD30DA6C",
+      "createdAt": "2026-10-05T11:18:20.031Z"
+    }
+  ],
+  "students": [
+    {
+      "id": "stu_e7bf3b0d-dc13-441f-ad21-8e8b19155ed4",
+      "name": "Aasritha Sai Devireddy",
+      "email": "aasrithasaidevireddy944@gmail.com",
+      "phone": "08332841009",
+      "college": "Amrita",
+      "branch": "CSE - AI",
+      "graduationYear": "2027",
+      "goal": "Something new",
+      "projectName": "XYZ",
+      "stack": "Python",
+      "referralCode": "AI60-FD30DA6C",
+      "createdAt": "2026-10-05T11:15:18.925Z",
+      "progress": 10,
+      "streak": 1,
+      "lastActiveAt": "2026-10-05T11:17:10.900Z"
+    },
+    {
+      "id": "stu_2ee08bf3-8eb5-4539-8044-744693b9eeda",
+      "name": "Arya",
+      "email": "arya.100@gmail.com",
+      "phone": "09849188009",
+      "college": "Amrita",
+      "branch": "CSE - AI",
+      "graduationYear": "2027",
+      "goal": "New",
+      "projectName": "XYZ",
+      "stack": "Java",
+      "referralCode": "AI60-3AC2BE63",
+      "createdAt": "2026-10-05T11:18:20.031Z",
+      "progress": 0,
+      "streak": 0,
+      "lastActiveAt": null
+    }
+  ],
+  "referrals": [
+    {
+      "id": "ref_4ada3975-01db-4e97-a3fb-d1b3f4d85905",
+      "referrerId": "stu_e7bf3b0d-dc13-441f-ad21-8e8b19155ed4",
+      "referredStudentId": "stu_2ee08bf3-8eb5-4539-8044-744693b9eeda",
+      "createdAt": "2026-10-05T11:18:20.031Z"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "cp_704eab5e-7b6a-4be5-a399-f9c298b21500",
+      "studentId": "stu_e7bf3b0d-dc13-441f-ad21-8e8b19155ed4",
+      "title": "Build checkpoint",
+      "description": "Build progress recorded from the Student Build Lab.",
+      "progress": 10,
+      "createdAt": "2026-10-05T11:17:10.900Z"
+    }
+  ],
+  "mentorMessages": [
+    {
+      "id": "mentor_303e21f8-8d53-4dda-98dc-c44982398653",
+      "studentId": "stu_e7bf3b0d-dc13-441f-ad21-8e8b19155ed4",
+      "message": "how do i print",
+      "reply": "For XYZ, keep the next step small: get one complete input → processing → output path working. Once that works, record it as a checkpoint before expanding scope.",
+      "createdAt": "2026-10-05T11:17:23.807Z"
+    }
+  ],
+  "strategyRuns": [
+    {
+      "id": "strategy_3d86181d-1876-4959-9081-2dc3b8446e9b",
+      "generatedAt": "2026-10-05T11:16:06.206Z",
+      "inputs": {
+        "target": 500,
+        "budget": 2000,
+        "durationDays": 7
+      },
+      "actual": {
+        "total": 1,
+        "target": 500,
+        "remaining": 499,
+        "progressPercent": 0.2,
+        "daysElapsed": 0,
+        "daysLeft": 7,
+        "budget": 2000,
+        "spent": 0,
+        "budgetRemaining": 2000,
+        "blendedCpa": 0,
+        "referrals": 0,
+        "referralSharePercent": 0,
+        "channels": {
+          "Email": 1
+        }
+      },
+      "decision": {
+        "remainingRegistrations": 499,
+        "requiredRegistrationsPerDay": 72,
+        "currentRegistrationsPerDay": 0,
+        "dailyBudgetCap": 285,
+        "contingencyReserve": 998
+      },
+      "recommendations": [
+        "You are behind the required pace. Increase referral-led distribution first and add urgency to the workshop CTA.",
+        "Referral contribution is below 35%. Push a simple share-to-friends CTA and give coordinators ready-to-forward copy.",
+        "Use WhatsApp groups, college clubs/placement cells and email as the priority channels; keep the message focused on a concrete 60-minute outcome."
+      ],
+      "channelPlan": [
+        {
+          "channel": "Student referrals + ambassadors",
+          "goal": 225,
+          "budget": 0,
+          "why": "Lowest-friction distribution with trackable ownership."
+        },
+        {
+          "channel": "WhatsApp communities",
+          "goal": 125,
+          "budget": 0,
+          "why": "High reach inside student communities; use coordinator-owned groups."
+        },
+        {
+          "channel": "College clubs / placement cells",
+          "goal": 100,
+          "budget": 0,
+          "why": "Direct access to final-year engineering cohorts."
+        },
+        {
+          "channel": "Email + organic social",
+          "goal": 50,
+          "budget": 0,
+          "why": "Value-first reminders and proof of the 60-minute build."
+        }
+      ],
+      "spendAdvice": "Keep paid spend at ₹0 initially; reserve up to ₹2000 as a contingency only after measuring organic/referral conversion.",
+      "guardrails": [
+        "Never count a registration unless it exists in the registry.",
+        "Do not fabricate referral or conversion numbers.",
+        "Stay within the ₹2,000 total campaign cap.",
+        "Recalculate the plan whenever actual registrations, referrals or spend change."
+      ]
+    }
+  ],
+  "budgetLog": [
+    {
+      "id": "spend_feaa9e34-1420-486a-9dab-fb204a1df688",
+      "amount": 100,
+      "channel": "WhatsApp communities",
+      "note": "",
+      "createdAt": "2026-10-05T11:16:41.787Z"
+    }
+  ],
+  "codeWorkspaces": [
+    {
+      "id": "ws_bb03ab3d-b9b8-47e0-b635-79e0238a44e3",
+      "studentId": "stu_e7bf3b0d-dc13-441f-ad21-8e8b19155ed4",
+      "createdAt": "2026-10-05T11:17:10.884Z",
+      "language": "python",
+      "code": "print(\"Hello World\")\n",
+      "updatedAt": "2026-10-05T11:17:14.049Z"
+    }
+  ]
+}
