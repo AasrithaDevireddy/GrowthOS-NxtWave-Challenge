@@ -1,30 +1,56 @@
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
-const { spawn } = require("child_process");
+const http = require('http');
+const path = require('path');
+const { spawn } = require('child_process');
 
-const PORT = Number(process.env.PORT || 10000);
+const PUBLIC_PORT = process.env.PORT || 10000;
+
 const API_PORT = 4000;
+const ADMIN_PORT = 3000;
+const STUDENT_PORT = 3001;
 
 const root = __dirname;
 
-// Start existing API internally
-const api = spawn(process.execPath, [path.join(root, "api", "server.js")], {
-  cwd: root,
-  stdio: "inherit"
-});
+const services = [
+  ['API', 'api/server.js', API_PORT],
+  ['ADMIN', 'admin/server.js', ADMIN_PORT],
+  ['STUDENT', 'student/server.js', STUDENT_PORT]
+];
 
-api.on("error", err => console.error("API failed:", err));
+const children = [];
 
-function proxyApi(req, res) {
+for (const [name, file, port] of services) {
+  const child = spawn(
+    process.execPath,
+    [path.join(root, file)],
+    {
+      cwd: root,
+      stdio: 'inherit',
+      env: {
+        ...process.env
+      }
+    }
+  );
+
+  children.push(child);
+
+  child.on('error', err => {
+    console.error(`[${name}] failed: ${err.message}`);
+  });
+
+  child.on('exit', code => {
+    console.log(`[${name}] exited with code ${code}`);
+  });
+}
+
+function proxy(req, res, port, targetPath = null) {
   const options = {
-    hostname: "127.0.0.1",
-    port: API_PORT,
-    path: req.url,
+    hostname: '127.0.0.1',
+    port,
+    path: targetPath || req.url,
     method: req.method,
     headers: {
       ...req.headers,
-      host: `127.0.0.1:${API_PORT}`
+      host: `127.0.0.1:${port}`
     }
   };
 
@@ -33,12 +59,18 @@ function proxyApi(req, res) {
     response.pipe(res);
   });
 
-  upstream.on("error", err => {
-    res.writeHead(503, {
-      "Content-Type": "application/json"
-    });
+  upstream.on('error', err => {
+    console.error(`Proxy error on port ${port}:`, err.message);
+
+    if (!res.headersSent) {
+      res.writeHead(503, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store'
+      });
+    }
+
     res.end(JSON.stringify({
-      error: "API unavailable",
+      error: 'GrowthOS service temporarily unavailable',
       details: err.message
     }));
   });
@@ -46,60 +78,87 @@ function proxyApi(req, res) {
   req.pipe(upstream);
 }
 
-function serveFile(file, res) {
-  fs.readFile(file, (err, data) => {
-    if (err) {
-      res.writeHead(500);
-      return res.end("File error");
-    }
+const server = http.createServer((req, res) => {
+  const url = new URL(
+    req.url,
+    `http://${req.headers.host || 'localhost'}`
+  );
 
-    res.writeHead(200, {
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "no-store"
-    });
+  const pathname = url.pathname;
 
-    res.end(data);
-  });
+  /*
+   * API
+   *
+   * /api/... ? API server :4000
+   */
+  if (pathname.startsWith('/api/')) {
+    return proxy(req, res, API_PORT);
+  }
+
+  /*
+   * ADMIN
+   *
+   * /admin
+   * /admin/
+   * /admin/index.html
+   *
+   * ? Admin server :3000
+   */
+  if (
+    pathname === '/admin' ||
+    pathname === '/admin/' ||
+    pathname === '/admin/index.html'
+  ) {
+    const query = url.search || '';
+
+    return proxy(
+      req,
+      res,
+      ADMIN_PORT,
+      '/index.html' + query
+    );
+  }
+
+  /*
+   * STUDENT
+   *
+   * Everything else ? Student server :3001
+   */
+  return proxy(req, res, STUDENT_PORT);
+});
+
+server.listen(PUBLIC_PORT, '0.0.0.0', () => {
+  console.log('');
+  console.log('========================================');
+  console.log('       GrowthOS PUBLIC SERVER');
+  console.log('========================================');
+  console.log(`Public:  http://localhost:${PUBLIC_PORT}`);
+  console.log(`Student: http://localhost:${PUBLIC_PORT}/`);
+  console.log(`Admin:   http://localhost:${PUBLIC_PORT}/admin`);
+  console.log(`API:     http://localhost:${PUBLIC_PORT}/api/health`);
+  console.log('');
+  console.log(`Internal API:     http://localhost:${API_PORT}`);
+  console.log(`Internal Admin:   http://localhost:${ADMIN_PORT}`);
+  console.log(`Internal Student: http://localhost:${STUDENT_PORT}`);
+  console.log('========================================');
+  console.log('');
+});
+
+function shutdown() {
+  console.log('\nShutting down GrowthOS...');
+
+  for (const child of children) {
+    try {
+      child.kill();
+    } catch {}
+  }
+
+  try {
+    server.close();
+  } catch {}
+
+  process.exit(0);
 }
 
-const server = http.createServer((req, res) => {
-
-  // API
-  if (req.url.startsWith("/api/")) {
-    return proxyApi(req, res);
-  }
-
-  // Admin
-  if (req.url === "/admin" || req.url === "/admin/") {
-    return serveFile(
-      path.join(root, "admin", "index.html"),
-      res
-    );
-  }
-
-  // Student
-  if (req.url === "/" || req.url === "/index.html") {
-    return serveFile(
-      path.join(root, "student", "index.html"),
-      res
-    );
-  }
-
-  res.writeHead(404, {
-    "Content-Type": "text/plain"
-  });
-
-  res.end("GrowthOS page not found");
-});
-
-server.listen(PORT, "0.0.0.0", () => {
-  console.log(`GrowthOS LIVE SERVER running on port ${PORT}`);
-  console.log(`Student: /`);
-  console.log(`Admin: /admin`);
-  console.log(`API: /api/health`);
-});
-
-process.on("SIGTERM", () => {
-  api.kill();
-  server.close(() => process.exit(0));
-});
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
